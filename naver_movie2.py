@@ -53,6 +53,7 @@ headers = {
 #in case the reproduced version is not "correct".
 # response = requests.get('https://movie.naver.com/movie/bi/mi/pointWriteFormList.nhn?code=189069&type=after&isActualPointWriteExecute=false&isMileageSubscriptionAlready=false&isMileageSubscriptionReject=false', headers=headers)
 
+
 for movie in fin_movies_list:
     movie_code = movie['code']
     # print(movie_code)
@@ -86,8 +87,19 @@ for movie in fin_movies_list:
     # F12 > (상단) Network > ※ 웬만하면 'Preserve log' 체크해둘 것(이전에 불러온 로그들 남기는 용도) > (중간 좌측) Name 클릭하면 원하는 정보 확인 가능
 
     review_list = review_soup.select(
-        'body > div > div > div.score_result > ul > li')
+        'body > div > div > div.score_result > ul > li ')
 
-    print(len(review_list))
+    fin_review_list = []
 
-    break
+    for review in review_list:
+        review_stc = review.select_one('div.score_reple > p > span').get_text().strip()
+        review_rating = review.select_one('div.star_score > em').get_text()
+
+        movie_review_data = {
+            'rating' : review_rating,
+            'review_stc' : review_stc
+        }
+
+        fin_review_list.append(movie_review_data)
+
+print(fin_review_list)
